@@ -1,0 +1,47 @@
+<?php
+  $q = isset($_GET['long']) ? $_GET['long'] : '';
+
+  $blacklistUrl = 'https://raw.githubusercontent.com/aphiao/blacklist-keyword/main/blacklist.txt';
+  $blacklist = @file($blacklistUrl, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+  if ($blacklist === false) {
+    die("Tidak bisa memuat daftar blacklist.");
+  }
+  if (empty($q)) {
+    require_once '403.html';
+    exit;
+  }
+  if (in_array(strtolower($q), $blacklist)) {
+    require_once '403.html';
+    exit;
+  }
+  foreach ($blacklist as $badword) {
+    if (stripos($q, $badword) !== false) {
+      require_once '403.html';
+      exit;
+    }
+  }
+  $canonical = str_replace(' ', '-', $q);
+  $brand = strtoupper($q);
+  $permalink = strtolower($q);
+
+  if (isset($brand)) {
+    $brand = str_replace("-", " ", $brand);
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $fullUrl = $protocol . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+    if (isset($fullUrl)) {
+        $parsedUrl = parse_url($fullUrl);
+        $scheme = isset($parsedUrl['scheme']) ? $parsedUrl['scheme'] : '';
+        $host = isset($parsedUrl['host']) ? $parsedUrl['host'] : '';
+        $path = isset($parsedUrl['path']) ? $parsedUrl['path'] : '';
+        $query = isset($parsedUrl['query']) ? $parsedUrl['query'] : '';
+        $baseUrl = $scheme . "://" . $host . $path . $query;
+        $urlPath = $baseUrl;
+    } else {
+        echo "URL is Undefined.";
+    }
+  } else {
+    feedback404();
+    exit();
+  }
+?>
