@@ -1,4 +1,3 @@
-WINSLOT303
 winslot303
 goodbola
 bolavita
@@ -168,6 +167,4 @@ agent855
 indosuper
 ninobola
 goodbola
-GOODBOLA
-TERONG123
-teromg123
+terong123
