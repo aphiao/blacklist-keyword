@@ -3,36 +3,40 @@ name: Deploy Blacklist to All Domains
 on:
   push:
     paths:
-      - "blacklist.txt"   # Trigger hanya kalau blacklist.txt diupdate
+      - "blacklist.txt"
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - name: Install sshpass
-        run: sudo apt-get update && sudo apt-get install -y sshpass
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       # -------- Server 178.128.25.196 --------
       - name: Deploy to buatakun.vip
         run: |
-          sshpass -p "${{ secrets.SERVER1_PASS }}" scp -o StrictHostKeyChecking=no blacklist.txt ${{ secrets.SERVER1_USER }}@${{ secrets.SERVER1_IP }}:/var/www/buatakun.vip/html/blacklist.txt
+          scp -o StrictHostKeyChecking=no blacklist.txt ${{ secrets.SERVER1_USER }}@${{ secrets.SERVER1_IP }}:/var/www/buatakun.vip/html/blacklist.txt
 
       - name: Deploy to cenganoi.com
         run: |
-          sshpass -p "${{ secrets.SERVER1_PASS }}" scp -o StrictHostKeyChecking=no blacklist.txt ${{ secrets.SERVER1_USER }}@${{ secrets.SERVER1_IP }}:/var/www/cenganoi.com/html/blacklist.txt
+          scp -o StrictHostKeyChecking=no blacklist.txt ${{ secrets.SERVER1_USER }}@${{ secrets.SERVER1_IP }}:/var/www/cenganoi.com/html/blacklist.txt
 
       - name: Deploy to ortminte.com
         run: |
-          sshpass -p "${{ secrets.SERVER1_PASS }}" scp -o StrictHostKeyChecking=no blacklist.txt ${{ secrets.SERVER1_USER }}@${{ secrets.SERVER1_IP }}:/var/www/ortminte.com/html/blacklist.txt
+          scp -o StrictHostKeyChecking=no blacklist.txt ${{ secrets.SERVER1_USER }}@${{ secrets.SERVER1_IP }}:/var/www/ortminte.com/html/blacklist.txt
 
       # -------- Server 157.230.250.46 --------
       - name: Deploy to kacangmurah.site
         run: |
-          sshpass -p "${{ secrets.SERVER2_PASS }}" scp -o StrictHostKeyChecking=no blacklist.txt ${{ secrets.SERVER2_USER }}@${{ secrets.SERVER2_IP }}:/var/www/kacangmurah.site/html/blacklist.txt
+          scp -o StrictHostKeyChecking=no blacklist.txt ${{ secrets.SERVER2_USER }}@${{ secrets.SERVER2_IP }}:/var/www/kacangmurah.site/html/blacklist.txt
 
       - name: Deploy to nhamnov.site
         run: |
-          sshpass -p "${{ secrets.SERVER2_PASS }}" scp -o StrictHostKeyChecking=no blacklist.txt ${{ secrets.SERVER2_USER }}@${{ secrets.SERVER2_IP }}:/var/www/nhamnov.site/html/blacklist.txt
+          scp -o StrictHostKeyChecking=no blacklist.txt ${{ secrets.SERVER2_USER }}@${{ secrets.SERVER2_IP }}:/var/www/nhamnov.site/html/blacklist.txt
