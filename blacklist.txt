@@ -184,3 +184,7 @@ kananbet
 KANANBET
 RAJA-BOM
 RAJABOM
+unikbet
+UNIKBET
+unik-bet
+UNIK-BET
